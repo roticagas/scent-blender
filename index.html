@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scent Blender Pro - Cost Calculation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap');
+        body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; }
+        .custom-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        th.sortable { cursor: pointer; user-select: none; }
+        th.sortable:hover { background-color: #f1f5f9; }
+    </style>
+</head>
+<body class="p-4 lg:p-6 text-gray-800">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-purple-100 p-3 rounded-lg text-purple-600">
+                    <i class="fa-solid fa-flask text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-800">Scent Blender Pro <span class="text-sm font-normal text-gray-500 ml-2">v2.1 (Cost Calc)</span></h1>
+                    <p class="text-xs text-gray-500">เครื่องมือออกแบบสูตรน้ำมันหอมระเหย พร้อมคำนวณต้นทุน</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3 bg-gray-50 p-2 rounded-lg border border-gray-200">
+                <div class="text-sm font-medium text-gray-600 px-2">
+                    <i class="fa-solid fa-database mr-1"></i> ฐานข้อมูล:
+                </div>
+                <input type="file" id="masterDbInput" class="hidden" accept=".json">
+                <button onclick="document.getElementById('masterDbInput').click()" 
+                    class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm px-4 py-2 rounded-md transition shadow-sm flex items-center">
+                    <i class="fa-solid fa-folder-open mr-2 text-yellow-500"></i> โหลด scents.json
+                </button>
+                <span id="dbStatus" class="text-xs text-red-500 font-medium">รอไฟล์...</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            
+            <div class="xl:col-span-7 space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-[850px]">
+                    <div class="p-4 border-b bg-gray-50">
+                        <h2 class="font-semibold text-gray-700 mb-3"><i class="fa-solid fa-list-ul mr-2"></i>เลือกส่วนผสม (Ingredient Source)</h2>
+                        <div class="flex flex-col md:flex-row gap-2">
+                            <div class="flex-1 relative">
+                                <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400 text-sm"></i>
+                                <input type="text" id="searchInput" placeholder="ค้นหาชื่อ, family, effect..." 
+                                    class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-purple-500">
+                            </div>
+                            <select id="familyFilter" class="w-full md:w-32 border border-gray-300 rounded-lg text-sm p-2 bg-white"><option value="">All Families</option></select>
+                            <select id="noteFilter" class="w-full md:w-32 border border-gray-300 rounded-lg text-sm p-2 bg-white"><option value="">All Notes</option></select>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 overflow-auto custom-scroll relative">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-white sticky top-0 shadow-sm z-10 text-xs uppercase text-gray-500 font-semibold">
+                                <tr>
+                                    <th class="p-3 sortable" onclick="sortTable('name')">ชื่อกลิ่น <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-3 sortable w-24" onclick="sortTable('family')">Family <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-3 sortable w-24" onclick="sortTable('note')">Note <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-3 sortable w-20 text-right" onclick="sortTable('cost')">Cost <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-3 w-28 text-center">เพิ่ม</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sourceTableBody" class="text-sm divide-y divide-gray-100">
+                                <tr><td colspan="5" class="p-8 text-center text-gray-400">กรุณาโหลดไฟล์ scents.json</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="xl:col-span-5 space-y-6">
+                
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <h2 class="font-semibold text-gray-700"><i class="fa-solid fa-vial mr-2"></i>สูตรปรุง (My Blend)</h2>
+                        <div class="space-x-1">
+                            <input type="file" id="loadBlendInput" class="hidden" accept=".json">
+                            <button onclick="document.getElementById('loadBlendInput').click()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded transition">โหลด</button>
+                            <button onclick="saveBlend()" class="text-xs bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded transition">บันทึก</button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 mb-4">
+                        <input type="text" id="blendName" class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm" placeholder="ชื่อสูตร (Blend Name)">
+                        <input type="text" id="blendDesc" class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm" placeholder="คำอธิบาย (Description)">
+                    </div>
+
+                    <div class="overflow-x-auto border rounded-lg mb-2 max-h-60 overflow-y-auto custom-scroll">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50 text-gray-500 text-xs uppercase sticky top-0">
+                                <tr>
+                                    <th class="p-2 text-left">ชื่อ</th>
+                                    <th class="p-2 text-center w-14">หยด</th>
+                                    <th class="p-2 text-center w-14">%</th>
+                                    <th class="p-2 text-right w-16">รวม</th>
+                                    <th class="p-2 w-8"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="blendList" class="divide-y divide-gray-100">
+                                <tr class="text-center text-gray-400"><td colspan="5" class="py-4">ยังไม่มีส่วนผสม</td></tr>
+                            </tbody>
+                            <tfoot class="bg-gray-50 font-semibold text-gray-700 border-t sticky bottom-0 text-xs">
+                                <tr>
+                                    <td class="p-2 text-right">รวม</td>
+                                    <td class="p-2 text-center" id="totalDropsDisplay">0</td>
+                                    <td class="p-2 text-center">100%</td>
+                                    <td class="p-2 text-right text-purple-600" id="totalCostDisplay">0.00</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4">
+                    
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                        <h3 class="text-sm font-bold text-gray-700 mb-4 uppercase tracking-wide">
+                            <i class="fa-solid fa-layer-group text-blue-500 mr-2"></i>Note Structure
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-xs">
+                                <div class="w-20 font-medium text-orange-600">Top</div>
+                                <div class="flex-1 bg-gray-100 rounded-full h-2 mx-2"><div id="topBar" class="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full transition-all" style="width: 0%"></div></div>
+                                <div class="w-10 text-right text-gray-600" id="topPercent">0%</div>
+                            </div>
+                            <div class="flex items-center text-xs">
+                                <div class="w-20 font-medium text-green-600">Middle</div>
+                                <div class="flex-1 bg-gray-100 rounded-full h-2 mx-2"><div id="midBar" class="bg-gradient-to-r from-green-400 to-emerald-600 h-2 rounded-full transition-all" style="width: 0%"></div></div>
+                                <div class="w-10 text-right text-gray-600" id="midPercent">0%</div>
+                            </div>
+                            <div class="flex items-center text-xs">
+                                <div class="w-20 font-medium text-amber-800">Base</div>
+                                <div class="flex-1 bg-gray-100 rounded-full h-2 mx-2"><div id="baseBar" class="bg-gradient-to-r from-amber-700 to-brown-900 h-2 rounded-full transition-all" style="width: 0%"></div></div>
+                                <div class="w-10 text-right text-gray-600" id="basePercent">0%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                        <h3 class="text-sm font-bold text-gray-700 mb-4 uppercase tracking-wide">
+                            <i class="fa-solid fa-palette text-pink-500 mr-2"></i>Family Distribution
+                        </h3>
+                        <div id="familyDistribution" class="space-y-2">
+                            <span class="text-gray-400 text-xs italic">- ยังไม่มีข้อมูล -</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                        <h3 class="text-sm font-bold text-gray-700 mb-4 uppercase tracking-wide">
+                            <i class="fa-solid fa-wand-magic-sparkles text-purple-500 mr-2"></i>Effects Summary
+                        </h3>
+                        <div class="space-y-3">
+                            <div>
+                                <div class="text-[10px] font-bold text-red-500 uppercase mb-1">Stimulating</div>
+                                <div id="stimulatingTags" class="flex flex-wrap gap-1.5"><span class="text-gray-300 text-xs italic">-</span></div>
+                            </div>
+                            <div class="border-t border-dashed"></div>
+                            <div>
+                                <div class="text-[10px] font-bold text-blue-500 uppercase mb-1">Serene</div>
+                                <div id="sereneTags" class="flex flex-wrap gap-1.5"><span class="text-gray-300 text-xs italic">-</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Configuration & State ---
+        const familyColors = {
+            "Citrus": "#D4AC0D", "Floral": "#9F6162", "Spice": "#A88982",
+            "Minty": "#5E868E", "Herb": "#617059", "Woody": "#A68A4E",
+            "Earthy": "#848883", "Other": "#9CA3AF"
+        };
+        let masterData = { scents: [], families: [], notes: [] };
+        let currentBlend = [];
+        let sortConfig = { key: 'name', direction: 'asc' };
+
+        // --- Data Loading ---
+        document.getElementById('masterDbInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const json = JSON.parse(evt.target.result);
+                    if (!json.scents) throw new Error("Invalid format");
+                    masterData = json;
+                    
+                    // Init lists
+                    masterData.families = [...new Set(masterData.scents.map(s => s.family))].sort();
+                    masterData.notes = [...new Set(masterData.scents.map(s => s.note))].sort();
+
+                    document.getElementById('dbStatus').innerHTML = `<span class="text-green-600"><i class="fa-solid fa-check-circle"></i> Loaded (${masterData.scents.length})</span>`;
+                    
+                    populateFilters();
+                    renderSourceTable();
+                    alert("โหลดฐานข้อมูลเรียบร้อย");
+                } catch (err) { alert(err.message); }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        });
+
+        function populateFilters() {
+            const fSel = document.getElementById('familyFilter');
+            const nSel = document.getElementById('noteFilter');
+            fSel.length = 1; nSel.length = 1;
+            masterData.families.forEach(f => fSel.appendChild(new Option(f, f)));
+            masterData.notes.forEach(n => nSel.appendChild(new Option(n, n)));
+        }
+
+        // --- Source Table ---
+        function renderSourceTable() {
+            const tbody = document.getElementById('sourceTableBody');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const fFilter = document.getElementById('familyFilter').value;
+            const nFilter = document.getElementById('noteFilter').value;
+
+            let filtered = masterData.scents.filter(s => {
+                const txt = s.name.toLowerCase() + " " + (s.stimulating_effects||[]).join(" ") + " " + (s.serene_effects||[]).join(" ");
+                return txt.includes(search) && (!fFilter || s.family === fFilter) && (!nFilter || s.note === nFilter);
+            });
+
+            filtered.sort((a, b) => {
+                let va = a[sortConfig.key], vb = b[sortConfig.key];
+                if(sortConfig.key === 'cost') { va = parseFloat(va)||0; vb = parseFloat(vb)||0; } // Numeric sort for cost
+                else { va = (va||"").toString(); vb = (vb||"").toString(); }
+                return sortConfig.direction === 'asc' ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+            });
+
+            tbody.innerHTML = '';
+            if(!filtered.length) { tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-400">ไม่พบข้อมูล</td></tr>`; return; }
+
+            filtered.forEach(s => {
+                const famColor = familyColors[s.family] || familyColors["Other"];
+                const cost = parseFloat(s.cost || 0).toFixed(2);
+                
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-purple-50 transition border-b border-gray-50";
+                tr.innerHTML = `
+                    <td class="p-3 font-medium text-gray-800">${s.name}</td>
+                    <td class="p-3"><span class="text-[10px] text-white px-2 py-0.5 rounded-full" style="background-color: ${famColor}">${s.family}</span></td>
+                    <td class="p-3 text-xs text-gray-500">${s.note}</td>
+                    <td class="p-3 text-right text-xs text-gray-600 font-mono">${cost}</td>
+                    <td class="p-3 text-center">
+                        <div class="flex justify-center gap-1">
+                            <input type="number" min="1" value="1" id="d-${s.name.replace(/\s/g,'-')}" class="w-10 text-center border rounded text-sm">
+                            <button onclick="addToBlend('${s.name}')" class="bg-purple-600 text-white px-2 py-1 rounded text-xs hover:bg-purple-700"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- Blending Logic ---
+        function addToBlend(name) {
+            const drops = parseInt(document.getElementById(`d-${name.replace(/\s/g,'-')}`).value) || 1;
+            // Always get fresh data from master
+            const item = masterData.scents.find(s => s.name === name);
+            if (!item) return;
+
+            const idx = currentBlend.findIndex(i => i.name === name);
+            if (idx > -1) {
+                currentBlend[idx].drops += drops;
+                // Update properties in case master changed
+                currentBlend[idx] = { ...item, drops: currentBlend[idx].drops };
+            } else {
+                currentBlend.push({ ...item, drops });
+            }
+
+            renderBlendTable();
+            updateAnalysis();
+        }
+
+        function removeFromBlend(idx) {
+            currentBlend.splice(idx, 1);
+            renderBlendTable();
+            updateAnalysis();
+        }
+
+        function renderBlendTable() {
+            const tbody = document.getElementById('blendList');
+            const totalDrops = currentBlend.reduce((a, b) => a + b.drops, 0);
+            
+            // Calculate Total Cost
+            let totalCost = 0;
+            
+            tbody.innerHTML = '';
+            if(!currentBlend.length) { 
+                tbody.innerHTML = `<tr class="text-center text-gray-400"><td colspan="5" class="py-4">Empty</td></tr>`; 
+                document.getElementById('totalDropsDisplay').textContent = 0;
+                document.getElementById('totalCostDisplay').textContent = "0.00";
+                return; 
+            }
+
+            currentBlend.forEach((item, idx) => {
+                const pct = totalDrops ? ((item.drops/totalDrops)*100).toFixed(1) : 0;
+                const famColor = familyColors[item.family] || "#ccc";
+                const unitCost = parseFloat(item.cost || 0);
+                const lineCost = unitCost * item.drops;
+                totalCost += lineCost;
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50 border-b border-gray-50">
+                        <td class="p-2">
+                            <div class="font-medium text-gray-800">${item.name}</div>
+                            <div class="flex items-center gap-1 mt-0.5">
+                                <span class="w-2 h-2 rounded-full" style="background-color: ${famColor}"></span>
+                                <span class="text-[10px] text-gray-400">${item.family}</span>
+                            </div>
+                        </td>
+                        <td class="p-2 text-center"><input type="number" value="${item.drops}" onchange="currentBlend[${idx}].drops=parseInt(this.value);renderBlendTable();updateAnalysis();" class="w-10 text-center border rounded text-xs"></td>
+                        <td class="p-2 text-center text-xs font-bold text-blue-600">${pct}%</td>
+                        <td class="p-2 text-right text-xs text-gray-600 font-mono">${lineCost.toFixed(2)}</td>
+                        <td class="p-2 text-center"><button onclick="removeFromBlend(${idx})" class="text-gray-300 hover:text-red-500"><i class="fa-solid fa-times"></i></button></td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('totalDropsDisplay').textContent = totalDrops;
+            document.getElementById('totalCostDisplay').textContent = totalCost.toFixed(2);
+        }
+
+        function updateAnalysis() {
+            if (!currentBlend.length) {
+                // Clear charts
+                ['top','mid','base'].forEach(k => { document.getElementById(`${k}Bar`).style.width='0%'; document.getElementById(`${k}Percent`).textContent='0%'; });
+                document.getElementById('familyDistribution').innerHTML = '<span class="text-gray-400 text-xs italic">- ยังไม่มีข้อมูล -</span>';
+                document.getElementById('stimulatingTags').innerHTML = '-';
+                document.getElementById('sereneTags').innerHTML = '-';
+                return;
+            }
+
+            const total = currentBlend.reduce((a, b) => a + b.drops, 0);
+            
+            // 1. Pyramid
+            let pyr = { top:0, mid:0, base:0 };
+            currentBlend.forEach(i => {
+                let n = (i.note || "").toLowerCase();
+                let w = i.drops;
+                if (n.includes('top') && n.includes('middle')) { pyr.top+=w*0.5; pyr.mid+=w*0.5; }
+                else if (n.includes('base') && n.includes('middle')) { pyr.base+=w*0.5; pyr.mid+=w*0.5; }
+                else if (n.includes('top')) pyr.top+=w;
+                else if (n.includes('middle')) pyr.mid+=w;
+                else if (n.includes('base')) pyr.base+=w;
+            });
+            ['top','mid','base'].forEach(k => {
+                let p = total ? ((pyr[k]/total)*100).toFixed(1) : 0;
+                document.getElementById(`${k}Bar`).style.width = `${p}%`;
+                document.getElementById(`${k}Percent`).textContent = `${p}%`;
+            });
+
+            // 2. Family Distribution
+            let famCounts = {};
+            currentBlend.forEach(i => { famCounts[i.family] = (famCounts[i.family] || 0) + i.drops; });
+            const famContainer = document.getElementById('familyDistribution');
+            famContainer.innerHTML = '';
+            Object.entries(famCounts).sort(([,a], [,b]) => b - a).forEach(([fam, count]) => {
+                const pct = ((count/total)*100).toFixed(1);
+                const color = familyColors[fam] || '#ccc';
+                famContainer.innerHTML += `
+                    <div class="flex items-center text-xs">
+                        <div class="w-20 font-medium truncate" style="color:${color}">${fam}</div>
+                        <div class="flex-1 bg-gray-100 rounded-full h-2 mx-2 relative overflow-hidden">
+                            <div class="h-full rounded-full absolute top-0 left-0 transition-all duration-500" style="width: ${pct}%; background-color: ${color}"></div>
+                        </div>
+                        <div class="w-10 text-right text-gray-500">${pct}%</div>
+                    </div>`;
+            });
+
+            // 3. Effects
+            const stim = new Set(), ser = new Set();
+            currentBlend.forEach(i => {
+                (i.stimulating_effects||[]).forEach(e => stim.add(e));
+                (i.serene_effects||[]).forEach(e => ser.add(e));
+            });
+            const tagHTML = (set, cls) => Array.from(set).sort().map(t => `<span class="px-2 py-0.5 rounded border text-[10px] ${cls}">${t}</span>`).join('');
+            document.getElementById('stimulatingTags').innerHTML = stim.size ? tagHTML(stim, 'bg-red-50 text-red-600 border-red-100') : '-';
+            document.getElementById('sereneTags').innerHTML = ser.size ? tagHTML(ser, 'bg-blue-50 text-blue-600 border-blue-100') : '-';
+        }
+
+        // --- Save & Load (Optimized) ---
+
+        function saveBlend() {
+            if(!currentBlend.length) return alert("ไม่มีข้อมูล");
+            
+            // OPTIMIZATION: Extract only minimal data
+            const minimalBlend = currentBlend.map(item => ({
+                name: item.name,
+                drops: item.drops
+            }));
+
+            const data = { 
+                name: document.getElementById('blendName').value || "Untitled",
+                description: document.getElementById('blendDesc').value || "",
+                timestamp: new Date().toISOString(),
+                blend: minimalBlend // Only saving name and drops
+            };
+            
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], {type:'application/json'}));
+            a.download = `${data.name.replace(/\s/g,'_')}.json`;
+            a.click();
+        }
+
+        document.getElementById('loadBlendInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            
+            if(masterData.scents.length === 0) {
+                alert("กรุณาโหลดไฟล์ scents.json (ฐานข้อมูล) ก่อนโหลดสูตรผสม");
+                e.target.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const data = JSON.parse(evt.target.result);
+                    if(!data.blend) throw new Error("ไฟล์สูตรไม่ถูกต้อง");
+                    
+                    document.getElementById('blendName').value = data.name || "";
+                    document.getElementById('blendDesc').value = data.description || "";
+                    
+                    // REHYDRATION: Lookup full data from masterData
+                    currentBlend = [];
+                    let missingScents = [];
+
+                    data.blend.forEach(savedItem => {
+                        const masterItem = masterData.scents.find(s => s.name === savedItem.name);
+                        if(masterItem) {
+                            currentBlend.push({
+                                ...masterItem, // Merge full details (cost, family, etc.)
+                                drops: savedItem.drops // Use saved drops
+                            });
+                        } else {
+                            missingScents.push(savedItem.name);
+                        }
+                    });
+
+                    if(missingScents.length > 0) {
+                        alert(`คำเตือน: ไม่พบกลิ่นต่อไปนี้ในฐานข้อมูลปัจจุบัน: ${missingScents.join(", ")}`);
+                    }
+
+                    renderBlendTable();
+                    updateAnalysis();
+                    alert("โหลดสูตรเรียบร้อย");
+                } catch(err) {
+                    alert("โหลดสูตรไม่สำเร็จ: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        });
+
+        // Utils & Listeners
+        function sortTable(key) {
+            sortConfig.key = key;
+            sortConfig.direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+            renderSourceTable();
+        }
+        ['searchInput','familyFilter','noteFilter'].forEach(id => document.getElementById(id).addEventListener(id==='searchInput'?'keyup':'change', renderSourceTable));
+		window.addEventListener('load', () => {
+    // ลองดึงไฟล์ scents.json จาก Server อัตโนมัติ
+    fetch('scents.json')
+        .then(response => {
+            if (!response.ok) throw new Error("Network response was not ok");
+            return response.json();
+        })
+        .then(json => {
+            // โค้ดส่วนจัดการข้อมูลเหมือนตอน upload
+            if (!json.scents || !Array.isArray(json.scents)) {
+                throw new Error("โครงสร้างไฟล์ไม่ถูกต้อง");
+            }
+            masterData = json;
+
+            // Init lists
+            masterData.families = [...new Set(masterData.scents.map(s => s.family))].sort();
+            masterData.notes = [...new Set(masterData.scents.map(s => s.note))].sort();
+
+            // UI Update
+            document.getElementById('dbStatus').innerHTML = `<span class="text-green-600"><i class="fa-solid fa-check-circle"></i> Auto-Loaded (${masterData.scents.length})</span>`;
+            
+            populateFilters();
+            renderSourceTable();
+            console.log("Auto-loaded database successfully");
+        })
+        .catch(err => {
+            console.log("Auto-load skipped/failed (User can still upload manually):", err);
+        });
+});
+    </script>
+</body>
+</html>

@@ -1,0 +1,899 @@
+{
+  "scents": [
+    {
+      "name": "Angelica",
+      "note": "Middle/Base",
+      "family": "Earthy",
+      "stimulating_effects": [
+        "Refreshing",
+        "Reviving"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Grounding",
+        "Soothing",
+        "Anti-fatigue"
+      ],
+      "cost": 3.0
+    },
+    {
+      "name": "Bay leaf",
+      "note": "Top",
+      "family": "Herb",
+      "stimulating_effects": [
+        "Refreshing",
+        "Reviving",
+        "Clear"
+      ],
+      "serene_effects": [
+        "Calming"
+      ],
+      "cost": 1.25
+    },
+    {
+      "name": "Bergamot",
+      "note": "Top/Middle",
+      "family": "Citrus",
+      "stimulating_effects": [
+        "Uplifting",
+        "Refreshing",
+        "Inspiring",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Grounding",
+        "Soothing",
+        "Relaxing",
+        "Anti-depress",
+        "Anti-fatigue",
+        "Anti-stress"
+      ],
+      "cost": 1.25
+    },
+    {
+      "name": "Black pepper",
+      "note": "Middle",
+      "family": "Spice",
+      "stimulating_effects": [
+        "Energizing",
+        "Reviving",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Calming"
+      ],
+      "cost": 1.6
+    },
+    {
+      "name": "Cedar wood",
+      "note": "Base",
+      "family": "Earthy",
+      "stimulating_effects": [
+        "Uplifting",
+        "Reviving",
+        "Inspiring",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Grounding"
+      ],
+      "cost": 1.0
+    },
+    {
+      "name": "Chamomile",
+      "note": "Top/Middle",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Reviving"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Soothing",
+        "Relaxing",
+        "Anti-fatigue",
+        "Anti-stress"
+      ],
+      "cost": 3.0
+    },
+    {
+      "name": "Cinnamon",
+      "note": "Base",
+      "family": "Spice",
+      "stimulating_effects": [
+        "Uplifting",
+        "Reviving",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Calming"
+      ],
+      "cost": 0.4
+    },
+    {
+      "name": "Citronella",
+      "note": "Top",
+      "family": "Citrus",
+      "stimulating_effects": [
+        "Uplifting",
+        "Refreshing",
+        "Energizing"
+      ],
+      "serene_effects": [
+        "Relaxing"
+      ],
+      "cost": 0.4
+    },
+    {
+      "name": "Clove",
+      "note": "Base",
+      "family": "Spice",
+      "stimulating_effects": [
+        "Refreshing",
+        "Energizing",
+        "Reviving",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Calming"
+      ],
+      "cost": 0.4
+    },
+    {
+      "name": "Coriander seed",
+      "note": "Middle",
+      "family": "Herb",
+      "stimulating_effects": [
+        "Refreshing",
+        "Energizing",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Calming"
+      ],
+      "cost": 1.6
+    },
+    {
+      "name": "Cypress",
+      "note": "Middle",
+      "family": "Woody",
+      "stimulating_effects": [
+        "Refreshing",
+        "Inspiring"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Grounding",
+        "Soothing",
+        "Relaxing"
+      ],
+      "cost": 1.6
+    },
+    {
+      "name": "Eucalyptus",
+      "note": "Top/Middle",
+      "family": "Minty",
+      "stimulating_effects": [
+        "Refreshing",
+        "Inspiring",
+        "Clear"
+      ],
+      "serene_effects": [
+        "Grounding",
+        "Soothing",
+        "Anti-depress",
+        "Anti-fatigue"
+      ],
+      "cost": 0.6
+    },
+    {
+      "name": "Fennel",
+      "note": "Top",
+      "family": "Spice",
+      "stimulating_effects": [
+        "Refreshing",
+        "Reviving",
+        "Clear"
+      ],
+      "serene_effects": [
+        "Soothing",
+        "Relaxing"
+      ],
+      "cost": 1.25
+    },
+    {
+      "name": "Frangipani",
+      "note": "Top",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Inspiring",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Soothing",
+        "Relaxing"
+      ],
+      "cost": 3.0
+    },
+    {
+      "name": "Frankincense",
+      "note": "Base",
+      "family": "Woody",
+      "stimulating_effects": [
+        "Uplifting",
+        "Reviving",
+        "Inspiring"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Grounding",
+        "Soothing",
+        "Anti-stress"
+      ],
+      "cost": 1.0
+    },
+    {
+      "name": "Geranium",
+      "note": "Middle",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Refreshing",
+        "Reviving"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Grounding",
+        "Relaxing",
+        "Anti-depress",
+        "Anti-fatigue"
+      ],
+      "cost": 1.6
+    },
+    {
+      "name": "Ginger",
+      "note": "Base/Middle",
+      "family": "Spice",
+      "stimulating_effects": [
+        "Refreshing",
+        "Reviving",
+        "Aphrodisiac",
+        "Clear"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Anti-fatigue"
+      ],
+      "cost": 1.6
+    },
+    {
+      "name": "Grapefruit",
+      "note": "Top",
+      "family": "Citrus",
+      "stimulating_effects": [
+        "Uplifting",
+        "Refreshing",
+        "Energizing"
+      ],
+      "serene_effects": [
+        "Anti-fatigue",
+        "Anti-stress"
+      ],
+      "cost": 1.25
+    },
+    {
+      "name": "Hyssop",
+      "note": "Middle",
+      "family": "Herb",
+      "stimulating_effects": [
+        "Refreshing",
+        "Reviving",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Soothing",
+        "Relaxing"
+      ],
+      "cost": 1.0
+    },
+    {
+      "name": "Immortelle",
+      "note": "Middle",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Uplifting",
+        "Inspiring"
+      ],
+      "serene_effects": [
+        "Grounding",
+        "Relaxing"
+      ],
+      "cost": 1.6
+    },
+    {
+      "name": "Jasmine",
+      "note": "Base/Middle",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Uplifting",
+        "Inspiring",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Relaxing",
+        "Anti-depress",
+        "Anti-stress"
+      ],
+      "cost": 1.25
+    },
+    {
+      "name": "Juniper Berry",
+      "note": "Middle",
+      "family": "Woody",
+      "stimulating_effects": [
+        "Reviving",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Soothing"
+      ],
+      "cost": 1.6
+    },
+    {
+      "name": "Lavandin",
+      "note": "Middle/Top",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Uplifting",
+        "Reviving"
+      ],
+      "serene_effects": [
+        "Soothing",
+        "Relaxing"
+      ],
+      "cost": 1.0
+    },
+    {
+      "name": "Lavender",
+      "note": "Middle/Top",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Reviving"
+      ],
+      "serene_effects": [
+        "Grounding",
+        "Soothing",
+        "Relaxing",
+        "Anti-depress",
+        "Anti-fatigue",
+        "Anti-stress"
+      ],
+      "cost": 1.6
+    },
+    {
+      "name": "Lemon",
+      "note": "Top",
+      "family": "Citrus",
+      "stimulating_effects": [
+        "Refreshing",
+        "Energizing",
+        "Reviving"
+      ],
+      "serene_effects": [
+        "Grounding",
+        "Soothing",
+        "Anti-fatigue"
+      ],
+      "cost": 1.0
+    },
+    {
+      "name": "Lemongrass",
+      "note": "Top",
+      "family": "Citrus",
+      "stimulating_effects": [
+        "Refreshing",
+        "Energizing"
+      ],
+      "serene_effects": [
+        "Grounding",
+        "Soothing",
+        "Anti-depress"
+      ],
+      "cost": 1.0
+    },
+    {
+      "name": "Lotus",
+      "note": "Middle",
+      "family": "Earthy",
+      "stimulating_effects": [
+        "Clear",
+        "Inspiring"
+      ],
+      "serene_effects": [
+        "Soothing",
+        "Relaxing",
+        "Anti-depress"
+      ],
+      "cost": 1.25
+    },
+    {
+      "name": "Marjoram",
+      "note": "Middle",
+      "family": "Herb",
+      "stimulating_effects": [
+        "Reviving",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Soothing",
+        "Relaxing",
+        "Anti-stress"
+      ],
+      "cost": 1.6
+    },
+    {
+      "name": "May Chang",
+      "note": "Top",
+      "family": "Citrus",
+      "stimulating_effects": [
+        "Uplifting",
+        "Refreshing",
+        "Energizing",
+        "Reviving",
+        "Clear"
+      ],
+      "serene_effects": [],
+      "cost": 1.25
+    },
+    {
+      "name": "Menthol",
+      "note": "Top",
+      "family": "Minty",
+      "stimulating_effects": [
+        "Uplifting",
+        "Refreshing",
+        "Energizing",
+        "Reviving",
+        "Inspiring"
+      ],
+      "serene_effects": [
+        "Anti-depress",
+        "Anti-fatigue"
+      ],
+      "cost": 1.0
+    },
+    {
+      "name": "Musk",
+      "note": "Base",
+      "family": "Woody",
+      "stimulating_effects": [
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Grounding",
+        "Anti-stress"
+      ],
+      "cost": 6.0
+    },
+    {
+      "name": "Neroli",
+      "note": "Top/Middle",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Reviving",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Soothing",
+        "Relaxing",
+        "Anti-depress",
+        "Anti-stress"
+      ],
+      "cost": 3.0
+    },
+    {
+      "name": "Oak moss",
+      "note": "Base",
+      "family": "Earthy",
+      "stimulating_effects": [
+        "Refreshing",
+        "Reviving"
+      ],
+      "serene_effects": [
+        "Soothing"
+      ],
+      "cost": 1.25
+    },
+    {
+      "name": "Patchouli",
+      "note": "Base",
+      "family": "Earthy",
+      "stimulating_effects": [
+        "Uplifting",
+        "Refreshing",
+        "Reviving",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Grounding",
+        "Relaxing"
+      ],
+      "cost": 1.0
+    },
+    {
+      "name": "Peppermint",
+      "note": "Top",
+      "family": "Minty",
+      "stimulating_effects": [
+        "Refreshing",
+        "Reviving",
+        "Inspiring",
+        "Aphrodisiac",
+        "Clear"
+      ],
+      "serene_effects": [
+        "Grounding",
+        "Anti-depress",
+        "Anti-fatigue",
+        "Anti-stress"
+      ],
+      "cost": 0.4
+    },
+    {
+      "name": "Petitgrain",
+      "note": "Middle",
+      "family": "Citrus",
+      "stimulating_effects": [
+        "Refreshing",
+        "Reviving",
+        "Inspiring",
+        "Clear"
+      ],
+      "serene_effects": [
+        "Relaxing",
+        "Anti-depress",
+        "Anti-fatigue"
+      ],
+      "cost": 1.0
+    },
+    {
+      "name": "Pine",
+      "note": "Base",
+      "family": "Woody",
+      "stimulating_effects": [
+        "Uplifting",
+        "Refreshing",
+        "Energizing"
+      ],
+      "serene_effects": [
+        "Grounding",
+        "Anti-fatigue",
+        "Anti-stress"
+      ],
+      "cost": 0.4
+    },
+    {
+      "name": "Ravensara",
+      "note": "Top",
+      "family": "Herb",
+      "stimulating_effects": [
+        "Uplifting"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Soothing",
+        "Relaxing"
+      ],
+      "cost": 1.25
+    },
+    {
+      "name": "Rose",
+      "note": "Top",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Uplifting",
+        "Refreshing",
+        "Inspiring"
+      ],
+      "serene_effects": [
+        "Soothing",
+        "Relaxing",
+        "Anti-depress",
+        "Anti-stress"
+      ],
+      "cost": 6.0
+    },
+    {
+      "name": "Rosemary",
+      "note": "Middle",
+      "family": "Herb",
+      "stimulating_effects": [
+        "Refreshing",
+        "Reviving",
+        "Inspiring",
+        "Clear"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Grounding",
+        "Soothing",
+        "Anti-fatigue"
+      ],
+      "cost": 1.25
+    },
+    {
+      "name": "Rosewood",
+      "note": "Base/Middle",
+      "family": "Woody",
+      "stimulating_effects": [],
+      "serene_effects": [
+        "Calming",
+        "Relaxing",
+        "Anti-depress",
+        "Anti-fatigue",
+        "Anti-stress"
+      ],
+      "cost": 1.0
+    },
+    {
+      "name": "Sandalwood",
+      "note": "Base",
+      "family": "Woody",
+      "stimulating_effects": [
+        "Uplifting",
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Grounding",
+        "Soothing",
+        "Relaxing",
+        "Anti-depress"
+      ],
+      "cost": 6.0
+    },
+    {
+      "name": "Siberian Fir",
+      "note": "Middle",
+      "family": "Woody",
+      "stimulating_effects": [
+        "Reviving",
+        "Clear"
+      ],
+      "serene_effects": [
+        "Soothing"
+      ],
+      "cost": 1.6
+    },
+    {
+      "name": "Sweet basil",
+      "note": "Top/Middle",
+      "family": "Spice",
+      "stimulating_effects": [
+        "Refreshing",
+        "Reviving",
+        "Clear"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Grounding",
+        "Anti-depress",
+        "Anti-fatigue"
+      ],
+      "cost": 1.0
+    },
+    {
+      "name": "Sweet orange",
+      "note": "Top",
+      "family": "Citrus",
+      "stimulating_effects": [
+        "Uplifting",
+        "Refreshing",
+        "Reviving",
+        "Inspiring"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Soothing",
+        "Anti-fatigue"
+      ],
+      "cost": 0.4
+    },
+    {
+      "name": "Tuberose",
+      "note": "Base",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Soothing",
+        "Relaxing",
+        "Anti-stress"
+      ],
+      "cost": 1.6
+    },
+    {
+      "name": "Vanilla",
+      "note": "Base",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Relaxing",
+        "Anti-depress"
+      ],
+      "cost": 0.4
+    },
+    {
+      "name": "Vetiver",
+      "note": "Base",
+      "family": "Earthy",
+      "stimulating_effects": [
+        "Uplifting",
+        "Reviving"
+      ],
+      "serene_effects": [
+        "Calming",
+        "Grounding",
+        "Relaxing"
+      ],
+      "cost": 1.6
+    },
+    {
+      "name": "Wintergreen",
+      "note": "Middle",
+      "family": "Minty",
+      "stimulating_effects": [
+        "Energizing",
+        "Reviving"
+      ],
+      "serene_effects": [
+        "Anti-fatigue"
+      ],
+      "cost": 0.4
+    },
+    {
+      "name": "Ylang ylang",
+      "note": "Base/Middle",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Aphrodisiac"
+      ],
+      "serene_effects": [
+        "Grounding",
+        "Soothing",
+        "Relaxing"
+      ],
+      "cost": 1.25
+    },
+    {
+      "name": "Coffee Flavor",
+      "note": "Base/Middle",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Uplifting"
+      ],
+      "serene_effects": [
+        "Anti-depress",
+        "Grounding",
+        "Anti-fatigue",
+		"Anti-stress"
+      ],
+      "cost": 1.6
+    },
+    {
+      "name": "Rose de mai",
+      "note": "Middle",
+      "family": "Floral",
+      "stimulating_effects": [
+        "Inspiring",
+		"Aphrodisiac"
+      ],
+      "serene_effects": [],
+      "cost": 3.0
+    },
+    {
+      "name": "Tea",
+      "note": "Middle",
+      "family": "Earthy",
+      "stimulating_effects": [
+        "Uplifting",
+		"Refreshing",
+		"Energizing",
+		"Reviving",
+		"Inspiring",
+		"Clear"
+      ],
+      "serene_effects": [
+	    "Grounding",
+		"Relaxing",
+		"Anti-stress"
+	  ],
+      "cost": 0.4
+    },
+    {
+      "name": "Violet",
+      "note": "Middle",
+      "family": "Floral",
+      "stimulating_effects": [
+		"Inspiring"
+      ],
+      "serene_effects": [
+	    "Calming",
+		"Relaxing",
+		"Anti-depress"
+	  ],
+      "cost": 1.25
+    },
+    {
+      "name": "White Tea",
+      "note": "Middle",
+      "family": "Floral",
+      "stimulating_effects": [
+		"Uplifting"
+      ],
+      "serene_effects": [
+	    "Grounding",
+		"Relaxing",
+		"Anti-stress"
+	  ],
+      "cost": 0.6
+    },
+    {
+      "name": "Yuzu",
+      "note": "Top",
+      "family": "Citrus",
+      "stimulating_effects": [
+		"Refreshing"
+      ],
+      "serene_effects": [
+		"Relaxing",
+		"Anti-depress",
+		"Anti-stress"
+	  ],
+      "cost": 1.6
+    }	
+  ],
+  "notes": [
+    "Top",
+    "Top/Middle",
+    "Middle",
+    "Middle/Top",
+    "Base/Middle",
+    "Base"
+  ],
+  "families": [
+    "Citrus",
+    "Floral",
+    "Spice",
+    "Minty",
+    "Herb",
+    "Woody",
+    "Earthy"
+  ],
+  "stimulating_effects": [
+    "Uplifting",
+    "Refreshing",
+    "Energizing",
+    "Reviving",
+    "Inspiring",
+    "Clear",
+    "Aphrodisiac"
+  ],
+  "serene_effects": [
+    "Anti-fatigue",
+    "Anti-stress",
+    "Grounding",
+    "Soothing",
+    "Calming",
+    "Relaxing",
+    "Anti-depress"
+  ]
+}
