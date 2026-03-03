@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scent Blender Pro - Cost Calculation</title>
+    <title>Scent Blender Pro - Cost & Note Calculation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -27,7 +27,7 @@
                     <i class="fa-solid fa-flask text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-gray-800">Scent Blender Pro <span class="text-sm font-normal text-gray-500 ml-2">v2.1 (Cost Calc)</span></h1>
+                    <h1 class="text-xl font-bold text-gray-800">Scent Blender Pro <span class="text-sm font-normal text-gray-500 ml-2">v2.2 (GitHub Ready)</span></h1>
                     <p class="text-xs text-gray-500">เครื่องมือออกแบบสูตรน้ำมันหอมระเหย พร้อมคำนวณต้นทุน</p>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                 <input type="file" id="masterDbInput" class="hidden" accept=".json">
                 <button onclick="document.getElementById('masterDbInput').click()" 
                     class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm px-4 py-2 rounded-md transition shadow-sm flex items-center">
-                    <i class="fa-solid fa-folder-open mr-2 text-yellow-500"></i> โหลด scents.json
+                    <i class="fa-solid fa-folder-open mr-2 text-yellow-500"></i> อัปโหลด scents.json เอง
                 </button>
                 <span id="dbStatus" class="text-xs text-red-500 font-medium">รอไฟล์...</span>
             </div>
@@ -74,7 +74,7 @@
                                 </tr>
                             </thead>
                             <tbody id="sourceTableBody" class="text-sm divide-y divide-gray-100">
-                                <tr><td colspan="5" class="p-8 text-center text-gray-400">กรุณาโหลดไฟล์ scents.json</td></tr>
+                                <tr><td colspan="5" class="p-8 text-center text-gray-400">กำลังโหลดข้อมูล...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -192,7 +192,30 @@
         let currentBlend = [];
         let sortConfig = { key: 'name', direction: 'asc' };
 
-        // --- Data Loading ---
+        // --- Auto Load from Server (For GitHub Pages) ---
+        window.addEventListener('load', () => {
+            fetch('scents.json')
+                .then(response => {
+                    if (!response.ok) throw new Error("ไม่พบไฟล์ scents.json บน Server");
+                    return response.json();
+                })
+                .then(json => {
+                    if (!json.scents || !Array.isArray(json.scents)) throw new Error("โครงสร้างไฟล์ไม่ถูกต้อง");
+                    masterData = json;
+                    masterData.families = [...new Set(masterData.scents.map(s => s.family))].sort();
+                    masterData.notes = [...new Set(masterData.scents.map(s => s.note))].sort();
+                    document.getElementById('dbStatus').innerHTML = `<span class="text-green-600"><i class="fa-solid fa-check-circle"></i> โหลดอัตโนมัติ (${masterData.scents.length})</span>`;
+                    populateFilters();
+                    renderSourceTable();
+                })
+                .catch(err => {
+                    console.log("Auto-load skipped/failed:", err);
+                    document.getElementById('dbStatus').innerHTML = `<span class="text-red-500 font-medium">รอไฟล์ฐานข้อมูล...</span>`;
+                    document.getElementById('sourceTableBody').innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-400">กรุณาอัปโหลดไฟล์ scents.json</td></tr>`;
+                });
+        });
+
+        // --- Manual Data Loading ---
         document.getElementById('masterDbInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -202,16 +225,11 @@
                     const json = JSON.parse(evt.target.result);
                     if (!json.scents) throw new Error("Invalid format");
                     masterData = json;
-                    
-                    // Init lists
                     masterData.families = [...new Set(masterData.scents.map(s => s.family))].sort();
                     masterData.notes = [...new Set(masterData.scents.map(s => s.note))].sort();
-
-                    document.getElementById('dbStatus').innerHTML = `<span class="text-green-600"><i class="fa-solid fa-check-circle"></i> Loaded (${masterData.scents.length})</span>`;
-                    
+                    document.getElementById('dbStatus').innerHTML = `<span class="text-green-600"><i class="fa-solid fa-check-circle"></i> โหลดจากเครื่อง (${masterData.scents.length})</span>`;
                     populateFilters();
                     renderSourceTable();
-                    alert("โหลดฐานข้อมูลเรียบร้อย");
                 } catch (err) { alert(err.message); }
             };
             reader.readAsText(file);
@@ -240,7 +258,7 @@
 
             filtered.sort((a, b) => {
                 let va = a[sortConfig.key], vb = b[sortConfig.key];
-                if(sortConfig.key === 'cost') { va = parseFloat(va)||0; vb = parseFloat(vb)||0; } // Numeric sort for cost
+                if(sortConfig.key === 'cost') { va = parseFloat(va)||0; vb = parseFloat(vb)||0; } // Numeric sort
                 else { va = (va||"").toString(); vb = (vb||"").toString(); }
                 return sortConfig.direction === 'asc' ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
             });
@@ -273,14 +291,12 @@
         // --- Blending Logic ---
         function addToBlend(name) {
             const drops = parseInt(document.getElementById(`d-${name.replace(/\s/g,'-')}`).value) || 1;
-            // Always get fresh data from master
             const item = masterData.scents.find(s => s.name === name);
             if (!item) return;
 
             const idx = currentBlend.findIndex(i => i.name === name);
             if (idx > -1) {
                 currentBlend[idx].drops += drops;
-                // Update properties in case master changed
                 currentBlend[idx] = { ...item, drops: currentBlend[idx].drops };
             } else {
                 currentBlend.push({ ...item, drops });
@@ -299,8 +315,6 @@
         function renderBlendTable() {
             const tbody = document.getElementById('blendList');
             const totalDrops = currentBlend.reduce((a, b) => a + b.drops, 0);
-            
-            // Calculate Total Cost
             let totalCost = 0;
             
             tbody.innerHTML = '';
@@ -324,7 +338,9 @@
                             <div class="font-medium text-gray-800">${item.name}</div>
                             <div class="flex items-center gap-1 mt-0.5">
                                 <span class="w-2 h-2 rounded-full" style="background-color: ${famColor}"></span>
-                                <span class="text-[10px] text-gray-400">${item.family}</span>
+                                <span class="text-[10px] text-gray-500 font-medium">${item.family}</span>
+                                <span class="text-[10px] text-gray-300">•</span>
+                                <span class="text-[10px] text-gray-400">${item.note}</span>
                             </div>
                         </td>
                         <td class="p-2 text-center"><input type="number" value="${item.drops}" onchange="currentBlend[${idx}].drops=parseInt(this.value);renderBlendTable();updateAnalysis();" class="w-10 text-center border rounded text-xs"></td>
@@ -341,7 +357,6 @@
 
         function updateAnalysis() {
             if (!currentBlend.length) {
-                // Clear charts
                 ['top','mid','base'].forEach(k => { document.getElementById(`${k}Bar`).style.width='0%'; document.getElementById(`${k}Percent`).textContent='0%'; });
                 document.getElementById('familyDistribution').innerHTML = '<span class="text-gray-400 text-xs italic">- ยังไม่มีข้อมูล -</span>';
                 document.getElementById('stimulatingTags').innerHTML = '-';
@@ -397,24 +412,16 @@
             document.getElementById('sereneTags').innerHTML = ser.size ? tagHTML(ser, 'bg-blue-50 text-blue-600 border-blue-100') : '-';
         }
 
-        // --- Save & Load (Optimized) ---
-
+        // --- Save & Load ---
         function saveBlend() {
             if(!currentBlend.length) return alert("ไม่มีข้อมูล");
-            
-            // OPTIMIZATION: Extract only minimal data
-            const minimalBlend = currentBlend.map(item => ({
-                name: item.name,
-                drops: item.drops
-            }));
-
+            const minimalBlend = currentBlend.map(item => ({ name: item.name, drops: item.drops }));
             const data = { 
                 name: document.getElementById('blendName').value || "Untitled",
                 description: document.getElementById('blendDesc').value || "",
                 timestamp: new Date().toISOString(),
-                blend: minimalBlend // Only saving name and drops
+                blend: minimalBlend 
             };
-            
             const a = document.createElement('a');
             a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], {type:'application/json'}));
             a.download = `${data.name.replace(/\s/g,'_')}.json`;
@@ -424,9 +431,8 @@
         document.getElementById('loadBlendInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(!file) return;
-            
             if(masterData.scents.length === 0) {
-                alert("กรุณาโหลดไฟล์ scents.json (ฐานข้อมูล) ก่อนโหลดสูตรผสม");
+                alert("กรุณารอโหลดฐานข้อมูล scents.json ก่อนโหลดสูตรผสม");
                 e.target.value = '';
                 return;
             }
@@ -440,32 +446,20 @@
                     document.getElementById('blendName').value = data.name || "";
                     document.getElementById('blendDesc').value = data.description || "";
                     
-                    // REHYDRATION: Lookup full data from masterData
                     currentBlend = [];
                     let missingScents = [];
-
                     data.blend.forEach(savedItem => {
                         const masterItem = masterData.scents.find(s => s.name === savedItem.name);
-                        if(masterItem) {
-                            currentBlend.push({
-                                ...masterItem, // Merge full details (cost, family, etc.)
-                                drops: savedItem.drops // Use saved drops
-                            });
-                        } else {
-                            missingScents.push(savedItem.name);
-                        }
+                        if(masterItem) currentBlend.push({ ...masterItem, drops: savedItem.drops });
+                        else missingScents.push(savedItem.name);
                     });
 
-                    if(missingScents.length > 0) {
-                        alert(`คำเตือน: ไม่พบกลิ่นต่อไปนี้ในฐานข้อมูลปัจจุบัน: ${missingScents.join(", ")}`);
-                    }
+                    if(missingScents.length > 0) alert(`ไม่พบกลิ่นต่อไปนี้ในฐานข้อมูลปัจจุบัน: ${missingScents.join(", ")}`);
 
                     renderBlendTable();
                     updateAnalysis();
                     alert("โหลดสูตรเรียบร้อย");
-                } catch(err) {
-                    alert("โหลดสูตรไม่สำเร็จ: " + err.message);
-                }
+                } catch(err) { alert("โหลดสูตรไม่สำเร็จ: " + err.message); }
             };
             reader.readAsText(file);
             e.target.value = '';
@@ -478,35 +472,7 @@
             renderSourceTable();
         }
         ['searchInput','familyFilter','noteFilter'].forEach(id => document.getElementById(id).addEventListener(id==='searchInput'?'keyup':'change', renderSourceTable));
-		window.addEventListener('load', () => {
-    // ลองดึงไฟล์ scents.json จาก Server อัตโนมัติ
-    fetch('scents.json')
-        .then(response => {
-            if (!response.ok) throw new Error("Network response was not ok");
-            return response.json();
-        })
-        .then(json => {
-            // โค้ดส่วนจัดการข้อมูลเหมือนตอน upload
-            if (!json.scents || !Array.isArray(json.scents)) {
-                throw new Error("โครงสร้างไฟล์ไม่ถูกต้อง");
-            }
-            masterData = json;
 
-            // Init lists
-            masterData.families = [...new Set(masterData.scents.map(s => s.family))].sort();
-            masterData.notes = [...new Set(masterData.scents.map(s => s.note))].sort();
-
-            // UI Update
-            document.getElementById('dbStatus').innerHTML = `<span class="text-green-600"><i class="fa-solid fa-check-circle"></i> Auto-Loaded (${masterData.scents.length})</span>`;
-            
-            populateFilters();
-            renderSourceTable();
-            console.log("Auto-loaded database successfully");
-        })
-        .catch(err => {
-            console.log("Auto-load skipped/failed (User can still upload manually):", err);
-        });
-});
     </script>
 </body>
 </html>
